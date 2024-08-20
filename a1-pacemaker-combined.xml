@@ -90,7 +90,6 @@ clock a_clk;</declaration>
 		</location>
 		<location id="id8" x="306" y="0">
 			<name x="331" y="-25">waitURI</name>
-			<label kind="invariant" x="331" y="0">v_clk &lt;= URI_t</label>
 		</location>
 		<location id="id9" x="52" y="-85">
 			<name x="9" y="-119">ignoreVSvrp</name>
@@ -199,7 +198,7 @@ clock vmClock;</declaration>
 			<committed/>
 		</location>
 		<location id="id27" x="-34" y="-59">
-			<name x="-44" y="-89">VSensed</name>
+			<name x="-44" y="-89">ASensed</name>
 			<committed/>
 		</location>
 		<location id="id28" x="-212" y="144">
@@ -207,7 +206,7 @@ clock vmClock;</declaration>
 			<committed/>
 		</location>
 		<location id="id29" x="-229" y="-212">
-			<name x="-239" y="-242">ASensed</name>
+			<name x="-239" y="-242">VSensed</name>
 			<committed/>
 		</location>
 		<location id="id30" x="-226" y="-51">
@@ -215,33 +214,33 @@ clock vmClock;</declaration>
 		<init ref="id30"/>
 		<transition id="id31">
 			<source ref="id30"/>
+			<target ref="id27"/>
+			<label kind="synchronisation" x="-102" y="-127">VSense?</label>
+			<nail x="-110" y="-102"/>
+		</transition>
+		<transition id="id32">
+			<source ref="id30"/>
+			<target ref="id29"/>
+			<label kind="synchronisation" x="-365" y="-144">ASense?</label>
+			<nail x="-289" y="-136"/>
+		</transition>
+		<transition id="id33">
+			<source ref="id30"/>
 			<target ref="id28"/>
 			<label kind="synchronisation" x="-161" y="100">AP?</label>
 			<nail x="-153" y="68"/>
 		</transition>
-		<transition id="id32">
+		<transition id="id34">
 			<source ref="id28"/>
 			<target ref="id30"/>
 			<label kind="assignment" x="-274" y="49">amClock := 0</label>
 			<nail x="-298" y="77"/>
 		</transition>
-		<transition id="id33">
+		<transition id="id35">
 			<source ref="id27"/>
 			<target ref="id30"/>
 			<label kind="assignment" x="-146" y="-43">vmClock :=0</label>
 			<nail x="-98" y="13"/>
-		</transition>
-		<transition id="id34">
-			<source ref="id30"/>
-			<target ref="id27"/>
-			<label kind="synchronisation" x="-190" y="-70">VSense?</label>
-			<nail x="-122" y="-91"/>
-		</transition>
-		<transition id="id35">
-			<source ref="id30"/>
-			<target ref="id29"/>
-			<label kind="synchronisation" x="-331" y="-178">ASense?</label>
-			<nail x="-289" y="-136"/>
 		</transition>
 		<transition id="id36">
 			<source ref="id29"/>
@@ -284,8 +283,6 @@ system A, V, PM, M;
 		<query>
 			<formula>A[] M.VSensed and PM.v_clk &lt;= VRP_t imply PM.ignoreVSvrp</formula>
 			<comment/>
-			<result outcome="failure" type="quality" timestamp="2024-08-20 12:56:12 +1200">
-			</result>
 		</query>
 	</queries>
 </nta>
