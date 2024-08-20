@@ -19,6 +19,7 @@ const int LRI_t = AEI_t + AVI_t;
 const int TLRI = AEI_t + AVI_t;
 const int Amaxwait = 1200;
 const int Aminwait = 1;
+const int startup = 10;
 </declaration>
 	<template>
 		<name x="5" y="5">ventricle</name>
@@ -28,6 +29,7 @@ const int Aminwait = 1;
 			<name x="-435" y="-149">RV</name>
 			<label kind="invariant" x="-401" y="-127">x&lt;Vmaxwait</label>
 		</location>
+		<init ref="id0"/>
 		<transition id="id1">
 			<source ref="id0"/>
 			<target ref="id0"/>
@@ -86,29 +88,49 @@ clock a_clk;</declaration>
 			<name x="42" y="42">waitVRP</name>
 			<label kind="invariant" x="-17" y="25">v_clk &lt;= VRP_t</label>
 		</location>
-		<location id="id8" x="357" y="0">
-			<name x="323" y="34">waitPVARP</name>
-			<label kind="invariant" x="298" y="17">v_clk &lt;= PVARP_t</label>
+		<location id="id8" x="306" y="0">
+			<name x="331" y="-25">waitURI</name>
+			<label kind="invariant" x="331" y="0">v_clk &lt;= URI_t</label>
 		</location>
-		<location id="id9" x="595" y="0">
-		</location>
-		<location id="id10" x="52" y="-85">
-			<name x="9" y="-119">ignoreVS</name>
+		<location id="id9" x="52" y="-85">
+			<name x="9" y="-119">ignoreVSvrp</name>
 			<committed/>
 		</location>
-		<location id="id11" x="119" y="-85">
-			<name x="109" y="-119">ignoreAS</name>
+		<location id="id10" x="119" y="-85">
+			<name x="109" y="-119">ignoreASvrp</name>
 			<committed/>
 		</location>
-		<location id="id12" x="357" y="-76">
-			<name x="323" y="-119">ignoreAS_pv</name>
-			<committed/>
+		<location id="id11" x="-518" y="0">
+			<label kind="invariant" x="-528" y="17">a_clk &lt;= startup</label>
 		</location>
-		<location id="id13" x="-518" y="0">
-			<name x="-569" y="-8">init</name>
+		<location id="id12" x="-654" y="0">
 		</location>
-		<init ref="id13"/>
+		<init ref="id12"/>
+		<transition id="id13">
+			<source ref="id11"/>
+			<target ref="id6"/>
+			<label kind="guard" x="-501" y="-76">a_clk &gt; startup</label>
+			<label kind="synchronisation" x="-501" y="-59">AP!</label>
+			<nail x="-417" y="-85"/>
+			<nail x="-348" y="-85"/>
+			<nail x="-314" y="-85"/>
+		</transition>
 		<transition id="id14">
+			<source ref="id12"/>
+			<target ref="id11"/>
+			<label kind="assignment" x="-620" y="8">a_clk = 0</label>
+		</transition>
+		<transition id="id15">
+			<source ref="id7"/>
+			<target ref="id8"/>
+		</transition>
+		<transition id="id16">
+			<source ref="id7"/>
+			<target ref="id9"/>
+			<label kind="synchronisation" x="0" y="-25">VP?</label>
+			<nail x="0" y="-34"/>
+		</transition>
+		<transition id="id17">
 			<source ref="id6"/>
 			<target ref="id7"/>
 			<label kind="synchronisation" x="-161" y="42">VSense?</label>
@@ -116,101 +138,154 @@ clock a_clk;</declaration>
 			<nail x="-204" y="34"/>
 			<nail x="-42" y="34"/>
 		</transition>
-		<transition id="id15">
+		<transition id="id18">
 			<source ref="id6"/>
 			<target ref="id7"/>
 			<label kind="guard" x="-204" y="-51">a_clk &gt;= AVI_t</label>
 			<label kind="synchronisation" x="-161" y="-34">VP!</label>
 			<label kind="assignment" x="-187" y="-25">v_clk = 0</label>
 		</transition>
-		<transition id="id16">
-			<source ref="id13"/>
-			<target ref="id6"/>
-			<label kind="synchronisation" x="-500" y="-17">ASense?</label>
-		</transition>
-		<transition id="id17">
-			<source ref="id9"/>
-			<target ref="id6"/>
-			<label kind="guard" x="-220" y="-238">v_clk &gt;= AEI_t</label>
-			<label kind="synchronisation" x="-220" y="-221">AP!</label>
-			<label kind="assignment" x="-220" y="-204">a_clk = 0</label>
-			<nail x="331" y="-204"/>
-			<nail x="-238" y="-204"/>
-		</transition>
-		<transition id="id18">
-			<source ref="id9"/>
-			<target ref="id7"/>
-			<label kind="synchronisation" x="178" y="102">VSense?</label>
-			<label kind="assignment" x="170" y="119">v_clk = 0</label>
-			<nail x="289" y="119"/>
-			<nail x="127" y="119"/>
-		</transition>
 		<transition id="id19">
-			<source ref="id8"/>
-			<target ref="id7"/>
-			<label kind="synchronisation" x="162" y="59">VSense?</label>
-			<label kind="assignment" x="162" y="76">v_clk = 0</label>
-			<nail x="288" y="76"/>
-			<nail x="144" y="76"/>
+			<source ref="id11"/>
+			<target ref="id6"/>
+			<label kind="synchronisation" x="-442" y="-25">ASense?</label>
+			<label kind="assignment" x="-374" y="-25">a_clk = 0</label>
 		</transition>
 		<transition id="id20">
-			<source ref="id12"/>
-			<target ref="id8"/>
+			<source ref="id8"/>
+			<target ref="id6"/>
+			<label kind="guard" x="68" y="-238">v_clk &gt;= AEI_t</label>
+			<label kind="synchronisation" x="68" y="-221">AP!</label>
+			<label kind="assignment" x="68" y="-204">a_clk = 0</label>
+			<nail x="263" y="-204"/>
+			<nail x="-238" y="-204"/>
 		</transition>
 		<transition id="id21">
-			<source ref="id8"/>
-			<target ref="id12"/>
-			<label kind="synchronisation" x="255" y="-59">ASense?</label>
-			<nail x="315" y="-51"/>
-		</transition>
-		<transition id="id22">
-			<source ref="id11"/>
-			<target ref="id7"/>
-		</transition>
-		<transition id="id23">
-			<source ref="id7"/>
-			<target ref="id11"/>
-			<label kind="synchronisation" x="85" y="-68">ASense?</label>
-			<nail x="94" y="-59"/>
-		</transition>
-		<transition id="id24">
 			<source ref="id10"/>
 			<target ref="id7"/>
 		</transition>
-		<transition id="id25">
+		<transition id="id22">
 			<source ref="id7"/>
 			<target ref="id10"/>
+			<label kind="synchronisation" x="85" y="-68">ASense?</label>
+			<nail x="94" y="-59"/>
+		</transition>
+		<transition id="id23">
+			<source ref="id9"/>
+			<target ref="id7"/>
+		</transition>
+		<transition id="id24">
+			<source ref="id7"/>
+			<target ref="id9"/>
 			<label kind="synchronisation" x="-8" y="-59">VSense?</label>
 			<nail x="43" y="-42"/>
 		</transition>
-		<transition id="id26">
-			<source ref="id9"/>
+		<transition id="id25">
+			<source ref="id8"/>
 			<target ref="id6"/>
 			<label kind="synchronisation" x="0" y="153">ASense?</label>
 			<label kind="assignment" x="-8" y="170">a_clk = 0</label>
 			<nail x="289" y="153"/>
 			<nail x="-212" y="153"/>
 		</transition>
-		<transition id="id27">
-			<source ref="id8"/>
-			<target ref="id9"/>
-			<label kind="guard" x="391" y="-25">v_clk &gt; PVARP_t</label>
+	</template>
+	<template>
+		<name>monitor</name>
+		<parameter>broadcast chan &amp;ASense, broadcast chan &amp;AP, broadcast chan &amp;VSense, broadcast chan &amp;VP</parameter>
+		<declaration>clock amClock;
+clock vmClock;</declaration>
+		<location id="id26" x="-426" y="-43">
+			<name x="-490" y="-51">VPaced</name>
+			<committed/>
+		</location>
+		<location id="id27" x="-34" y="-59">
+			<name x="-44" y="-89">VSensed</name>
+			<committed/>
+		</location>
+		<location id="id28" x="-212" y="144">
+			<name x="-228" y="160">APaced</name>
+			<committed/>
+		</location>
+		<location id="id29" x="-229" y="-212">
+			<name x="-239" y="-242">ASensed</name>
+			<committed/>
+		</location>
+		<location id="id30" x="-226" y="-51">
+		</location>
+		<init ref="id30"/>
+		<transition id="id31">
+			<source ref="id30"/>
+			<target ref="id28"/>
+			<label kind="synchronisation" x="-161" y="100">AP?</label>
+			<nail x="-153" y="68"/>
 		</transition>
-		<transition id="id28">
-			<source ref="id7"/>
-			<target ref="id8"/>
-			<label kind="guard" x="144" y="-25">v_clk &gt;= VRP_t</label>
+		<transition id="id32">
+			<source ref="id28"/>
+			<target ref="id30"/>
+			<label kind="assignment" x="-274" y="49">amClock := 0</label>
+			<nail x="-298" y="77"/>
+		</transition>
+		<transition id="id33">
+			<source ref="id27"/>
+			<target ref="id30"/>
+			<label kind="assignment" x="-146" y="-43">vmClock :=0</label>
+			<nail x="-98" y="13"/>
+		</transition>
+		<transition id="id34">
+			<source ref="id30"/>
+			<target ref="id27"/>
+			<label kind="synchronisation" x="-190" y="-70">VSense?</label>
+			<nail x="-122" y="-91"/>
+		</transition>
+		<transition id="id35">
+			<source ref="id30"/>
+			<target ref="id29"/>
+			<label kind="synchronisation" x="-331" y="-178">ASense?</label>
+			<nail x="-289" y="-136"/>
+		</transition>
+		<transition id="id36">
+			<source ref="id29"/>
+			<target ref="id30"/>
+			<label kind="assignment" x="-274" y="-147">amClock := 0</label>
+			<nail x="-162" y="-147"/>
+		</transition>
+		<transition id="id37">
+			<source ref="id30"/>
+			<target ref="id26"/>
+			<label kind="synchronisation" x="-394" y="5">VP?</label>
+			<nail x="-314" y="13"/>
+		</transition>
+		<transition id="id38">
+			<source ref="id26"/>
+			<target ref="id30"/>
+			<label kind="assignment" x="-378" y="-83">vmClock:=0</label>
+			<nail x="-362" y="-99"/>
 		</transition>
 	</template>
 	<system>// Place template instantiations here.
-Process = Template();
+// Declaration goes here.
+broadcast chan ASense, AP, VSense, VP;
+
+A = atrium(ASense, AP);
+V = ventricle(VSense, VP);
+PM = pacemaker(VSense, VP, ASense, AP);
+M = monitor(VSense, VP, ASense, AP);
+
 // List one or more processes to be composed into a system.
-system Process;
+system A, V, PM, M;
 </system>
 	<queries>
 		<query>
-			<formula/>
+			<formula>A[] not deadlock</formula>
 			<comment/>
+			<result outcome="success" type="quality" timestamp="2024-08-20 12:39:23 +1200">
+			</result>
+		</query>
+		<query>
+			<formula>A[] M.VSensed and PM.v_clk &lt;= VRP_t imply PM.ignoreVSvrp</formula>
+			<comment/>
+			<result outcome="failure" type="quality" timestamp="2024-08-20 12:56:12 +1200">
+			</result>
 		</query>
 	</queries>
 </nta>
