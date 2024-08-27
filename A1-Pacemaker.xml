@@ -566,7 +566,7 @@ a;//,
 			<formula>A[] not deadlock
 			</formula>
 			<comment/>
-			<result outcome="failure" type="quality" timestamp="2024-08-22 13:58:37 +1200">
+			<result outcome="success" type="quality" timestamp="2024-08-22 14:28:04 +1200">
 			</result>
 		</query>
 		<query>
@@ -607,7 +607,7 @@ a;//,
 		<query>
 			<formula>A[] v.LRI_DONE imply not a.waitAVI</formula>
 			<comment/>
-			<result outcome="failure" type="quality" timestamp="2024-08-22 13:55:16 +1200">
+			<result outcome="failure" type="quality" timestamp="2024-08-22 14:28:06 +1200">
 			</result>
 		</query>
 		<query>
@@ -625,16 +625,20 @@ a;//,
 			<comment>Time between V events &lt;= LRI</comment>
 		</query>
 		<query>
-			<formula>A[] v.WaitLRI imply v.t &lt;= LRI_t and v.LRI_DONE imply v.t &lt;= LRI_t</formula>
+			<formula>A[] ((v.WaitLRI imply v.t &lt;= LRI_t) and (v.LRI_DONE imply v.t &lt;= LRI_t))</formula>
 			<comment/>
+			<result outcome="success" type="quality" timestamp="2024-08-22 14:02:34 +1200">
+			</result>
 		</query>
 		<query>
 			<formula/>
 			<comment>VP after AVI</comment>
 		</query>
 		<query>
-			<formula/>
+			<formula>E&lt;&gt; v.LRI_DONE and a.waitV</formula>
 			<comment/>
+			<result outcome="success" type="quality" timestamp="2024-08-22 14:11:47 +1200">
+			</result>
 		</query>
 	</queries>
 </nta>
